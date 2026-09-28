@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { CategoryService } from './../category.service';
 
 @Component({
     selector: 'app-category-list',
@@ -23,8 +24,11 @@ export class CategoryListPage implements OnInit{
     dataSource = new MatTableDataSource<Category>();
     displayedColumns: string[] = ['id', 'name', 'action'];
 
-    constructor() { }
+    constructor(private categoryService: CategoryService) { }
 
     ngOnInit(): void {
+        this.categoryService.getCategories().subscribe(
+            categories => this.dataSource.data = categories
+        );
     }
 }
