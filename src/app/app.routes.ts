@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-    { path: 'categories', loadComponent: () => import('../category/category-list/category-list.page').then(m => m.CategoryListPage)},
+    { path: 'categories', loadComponent: () => import('../category/category-list/category-list.page').then(m => m.CategoryList)},
 ];

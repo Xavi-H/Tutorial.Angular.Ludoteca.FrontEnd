@@ -15,10 +15,6 @@ import { DialogConfirmation } from '../../core/dialog-confirmation/dialog-confir
     standalone: true,
     imports: [
         MatButtonModule,
-        MatTableDataSource,
-        MatDialog,
-        CategoryEdit,
-        MatButtonModule,
         MatIconModule,
         MatTableModule,
         CommonModule
