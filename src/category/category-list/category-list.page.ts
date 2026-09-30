@@ -40,7 +40,7 @@ export class CategoryList implements OnInit {
     this.loadData();
   }
 
-  createCategory() {    
+  createCategory() {
     const dialogRef = this.dialog.open(CategoryEdit, {
       data: {}
     });
@@ -48,8 +48,8 @@ export class CategoryList implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(!result) return;
       this.loadData();
-    });    
-  }  
+    });
+  }
 
   editCategory(category: Category) {
     const dialogRef = this.dialog.open(CategoryEdit, {
@@ -61,8 +61,8 @@ export class CategoryList implements OnInit {
       this.loadData();
     });
   }
-  
-  deleteCategory(category: Category) {    
+
+  deleteCategory(category: Category) {
     const dialogRef = this.dialog.open(DialogConfirmation, {
       data: { title: "Eliminar categoría", description: "Atención si borra la categoría se perderán sus datos.<br> ¿Desea eliminar la categoría?" }
     });
@@ -71,8 +71,8 @@ export class CategoryList implements OnInit {
       if (result) {
         this.categoryService.deleteCategory(category.id).subscribe(result => {
           this.loadData();
-        }); 
+        });
       }
     });
-  }  
+  }
 }
