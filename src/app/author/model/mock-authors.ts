@@ -1,4 +1,4 @@
-import { PaginatedData } from './../../core/model/page/PaginatedData'; // La ruta absoluta no la detecta bien
+import { PaginatedData } from '../../core/model/page/PaginatedData'; // La ruta absoluta no la detecta bien
 import { Author } from './Author';
 
 export const AUTHOR_DATA: PaginatedData<Author> = {
