@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-client-edit',
@@ -17,17 +18,18 @@ import { MatButtonModule } from '@angular/material/button';
 export class ClientEdit implements OnInit {
   protected readonly dialogRef = inject(MatDialogRef<ClientEdit>);
   protected readonly clientService = inject(ClientService);
-
   protected readonly id = signal<number | null>(null);
   protected readonly name = signal<string | null>(null);
+  protected readonly data = inject(MAT_DIALOG_DATA) as { client?: Client };
+  protected readonly snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
-    this.loadFormData();
+    this.loadFormData(this.data.client ?? null);
   }
 
-  loadFormData(): void {
-    this.id.set(null);
-    this.name.set(null);
+  loadFormData(initialData: Client | null): void {
+    this.id.set(initialData?.id ?? null);
+    this.name.set(initialData?.name ?? null);
   }
 
   onSave() {
@@ -39,8 +41,12 @@ export class ClientEdit implements OnInit {
     }
 
     const client = { id, name } as Client;
-    this.clientService.saveClient(client).subscribe(() => {
-      this.dialogRef.close(true);
+    this.clientService.saveClient(client).subscribe({
+      next: () => this.dialogRef.close(true),
+      error: (error) => // Si rep un error del backend mostra el missatge d'error
+        this.snackBar.open(error.error?.message ?? 'No se ha podido guardar el cliente', 'Cerrar', {
+          duration: 7000,
+        }),
     });
   }
 
