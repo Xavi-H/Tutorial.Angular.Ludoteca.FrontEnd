@@ -74,7 +74,7 @@ export class CategoryList implements OnInit {
           next: () => this.loadData(),
           error: (error) =>
             this.snackBar.open(
-              error.error?.message ?? 'Hay juegos que usan esta categoria, no se puede eliminar.',
+              error.error?.message ?? 'No se ha podido eliminar la categoría', // Si no rep un missatge d'error específic del backend, mostra un missatge genèric
               'Cerrar',
               { duration: 7000 } // Mostra el missatge durant 7 segons si no es tanca manualment
             ),
