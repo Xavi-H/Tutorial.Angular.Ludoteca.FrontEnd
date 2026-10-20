@@ -17,7 +17,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { toIsoDate } from './../../core/helpers/date.helper';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PrestamoEdit } from '../prestamo-edit/prestamo-edit';
+import { DialogConfirmation } from '../../core/dialog-confirmation/dialog-confirmation';
 @Component({
   selector: 'app-prestamo-list',
   standalone: true,
@@ -31,6 +35,7 @@ import { toIsoDate } from './../../core/helpers/date.helper';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatIconModule,
   ],
   templateUrl: './prestamo-list.page.html',
   styleUrl: './prestamo-list.page.scss',
@@ -39,6 +44,8 @@ export class PrestamoList implements OnInit {
   protected readonly prestamoService = inject(PrestamoService);
   protected readonly gameService = inject(GameService);
   protected readonly clientService = inject(ClientService);
+  protected readonly dialog = inject(MatDialog);
+  protected readonly snackBar = inject(MatSnackBar);
 
   // Les opcions que es mostren a l'usuari per filtrar
   protected readonly games = signal<Game[]>([]);
@@ -57,7 +64,7 @@ export class PrestamoList implements OnInit {
   totalElements: number = 0;
 
   dataSource = new MatTableDataSource<Prestamo>();
-  displayedColumns: string[] = ['id', 'game', 'client', 'startDate', 'endDate'];
+  displayedColumns: string[] = ['id', 'game', 'client', 'startDate', 'endDate', 'action'];
 
   ngOnInit(): void {
     this.gameService.getGames().subscribe((games) => this.games.set(games));
@@ -65,7 +72,7 @@ export class PrestamoList implements OnInit {
     this.loadPage();
   }
 
-   onSearch(): void {
+  onSearch(): void {
     const date = this.filterDate();
 
     this.appliedFilter = {
@@ -97,6 +104,56 @@ export class PrestamoList implements OnInit {
       this.pageNumber = data.pageable.pageNumber;
       this.pageSize = data.pageable.pageSize;
       this.totalElements = data.totalElements;
+    });
+  }
+
+  createPrestamo() {
+    const dialogRef = this.dialog.open(PrestamoEdit, { data: {} });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+      this.loadPage();
+    });
+  }
+
+  editPrestamo(prestamo: Prestamo) {
+    const dialogRef = this.dialog.open(PrestamoEdit, { data: { prestamo } });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+      this.loadPage();
+    });
+  }
+
+  deletePrestamo(prestamo: Prestamo) {
+    const dialogRef = this.dialog.open(DialogConfirmation, {
+      data: {
+        title: 'Eliminar préstamo',
+        description:
+          'Atención si borra el préstamo se perderán sus datos.<br> ¿Desea eliminar el préstamo?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      this.prestamoService.deletePrestamo(prestamo.id).subscribe({
+        next: () => {
+          // Si era l'unic prestec de la ultima pagina, es torna una pagina enrere per no mostrar una pagina buida
+          if (this.dataSource.data.length === 1 && this.pageNumber > 0) {
+            this.pageNumber--;
+          }
+          this.loadPage();
+        },
+        error: (error) =>
+          this.snackBar.open(
+            error.error?.message ?? 'No se ha podido eliminar el préstamo',
+            'Cerrar',
+            {
+              duration: 7000,
+            },
+          ),
+      });
     });
   }
 }

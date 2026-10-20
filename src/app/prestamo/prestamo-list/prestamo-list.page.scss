@@ -39,5 +39,14 @@
       flex: 0 0 15%;
       justify-content: center;
     }
+
+    .mat-column-action {
+      flex: 0 0 10%;
+      justify-content: center;
+    }
+  }
+
+  .footer {
+    text-align: right;
   }
 }

@@ -3,37 +3,44 @@
 
   <div class="filters">
     <form>
-        <mat-form-field>
-            <mat-label>Título del juego</mat-label>
-            <mat-select disableRipple [(ngModel)]="filterGame" name="game">
-                @for (game of games(); track game.id) {
-                    <mat-option [value]="game">{{ game.title }}</mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
+      <mat-form-field>
+        <mat-label>Título del juego</mat-label>
+        <mat-select disableRipple [(ngModel)]="filterGame" name="game">
+          @for (game of games(); track game.id) {
+            <mat-option [value]="game">{{ game.title }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>Cliente</mat-label>
-            <mat-select disableRipple [(ngModel)]="filterClient" name="client">
-                @for (client of clients(); track client.id) {
-                    <mat-option [value]="client">{{ client.name }}</mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
+      <mat-form-field>
+        <mat-label>Cliente</mat-label>
+        <mat-select disableRipple [(ngModel)]="filterClient" name="client">
+          @for (client of clients(); track client.id) {
+            <mat-option [value]="client">{{ client.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>Fecha</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="filterDate" name="date" readonly (click)="picker.open()" />
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+      <mat-form-field>
+        <mat-label>Fecha</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [(ngModel)]="filterDate"
+          name="date"
+          readonly
+          (click)="picker.open()"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
     </form>
 
     <div class="buttons">
-        <button mat-stroked-button (click)="onCleanFilter()">Limpiar</button>
-        <button mat-flat-button color="primary" (click)="onSearch()">Filtrar</button>
+      <button mat-stroked-button (click)="onCleanFilter()">Limpiar</button>
+      <button mat-flat-button color="primary" (click)="onSearch()">Filtrar</button>
     </div>
-</div>
+  </div>
 
   <mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="id">
@@ -61,6 +68,18 @@
       <mat-cell *matCellDef="let element"> {{ element.endDate | date: 'dd/MM/yyyy' }} </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="editPrestamo(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="deletePrestamo(element)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
     <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
@@ -73,4 +92,8 @@
     [length]="totalElements"
     showFirstLastButtons
   ></mat-paginator>
+
+  <div class="footer">
+    <button mat-flat-button color="primary" (click)="createPrestamo()">Nuevo préstamo</button>
+  </div>
 </div>

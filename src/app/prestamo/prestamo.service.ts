@@ -17,4 +17,13 @@ export class PrestamoService {
   getPrestamos(pageable: Pageable, filter: PrestamoFilter): Observable<PaginatedData<Prestamo>> {
     return this.http.post<PaginatedData<Prestamo>>(this.baseUrl, { pageable, ...filter }); // ...filter copia les propietats de filter dins l'objecte que s'envia al backend
   }
+
+  savePrestamo(prestamo: Prestamo): Observable<void> {
+    const url = prestamo.id ? `${this.baseUrl}/${prestamo.id}` : this.baseUrl; // Si té id modifica, sino crea un prestam nou
+    return this.http.put<void>(url, prestamo);
+  }
+
+  deletePrestamo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
 }

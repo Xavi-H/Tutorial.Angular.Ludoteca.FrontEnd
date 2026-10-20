@@ -1,0 +1,28 @@
+.container {
+  min-width: 450px;
+  max-width: 600px;
+  padding: 20px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .dates {
+    display: flex;
+    gap: 16px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+
+  .buttons {
+    text-align: right;
+
+    button {
+      margin-left: 10px;
+    }
+  }
+}

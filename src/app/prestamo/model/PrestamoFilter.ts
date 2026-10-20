@@ -1,6 +1,6 @@
 /**
  * Model que s'utlitza per filtrar els préstecs.
- * Els noms coincideixen amb LoanSearchDto del backend perquè funcioni correctament
+ * Els noms coincideixen amb PrestamoSearchDto del backend perquè funcioni correctament
  * @author Xavi-H
  */
 export interface PrestamoFilter {
