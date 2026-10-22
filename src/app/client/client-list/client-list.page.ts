@@ -9,6 +9,7 @@ import { ClientService } from '../client.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ClientEdit } from '../client-edit/client-edit';
 import { DialogConfirmation } from '../../core/dialog-confirmation/dialog-confirmation';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-client-list',
@@ -23,6 +24,7 @@ export class ClientList implements OnInit {
 
   protected readonly clientService = inject(ClientService);
   protected readonly dialog = inject(MatDialog);
+  protected readonly snackBar = inject(MatSnackBar); // Per gestionar els missatges i mostrar-los a l'usuari
 
   loadData(): void {
     this.clientService.getClients().subscribe((clients) => (this.dataSource.data = clients));
@@ -65,8 +67,16 @@ export class ClientList implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.clientService.deleteClient(client.id).subscribe((result) => {
-          this.loadData();
+        this.clientService.deleteClient(client.id).subscribe({
+          next: () => this.loadData(),
+          error: (error) =>
+            this.snackBar.open(
+              error.error?.message ?? 'No se ha podido eliminar el cliente', // Mensaje generico si no recibe nada del back
+              'Cerrar',
+              {
+                duration: 7000,
+              },
+            ),
         });
       }
     });
