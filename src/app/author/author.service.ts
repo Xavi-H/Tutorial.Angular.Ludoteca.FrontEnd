@@ -4,7 +4,6 @@ import { Pageable } from '../core/model/page/Pageable';
 import { Author } from './model/Author';
 import { PaginatedData } from '../core/model/page/PaginatedData';
 import { HttpClient } from '@angular/common/http';
-import { AUTHOR_DATA_LIST } from './model/mock-authors-list';
 
 @Injectable({
     providedIn: 'root',
